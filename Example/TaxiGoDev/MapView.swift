@@ -17,7 +17,9 @@ class MapView: GMSMapView {
     var startMarker = GMSMarker()
     var endMarker = GMSMarker()
     var driverMarker = GMSMarker()
+    var driversMarker = [GMSMarker]()
     var geocoder = GMSGeocoder()
+    var driverLocation: CLLocation?
     var startLocation: CLLocation?
     var endLocation: CLLocation?
     var startAdd: String?
@@ -46,6 +48,8 @@ class MapView: GMSMapView {
         self.camera = GMSCameraPosition(target: position, zoom: 15, bearing: 0, viewingAngle: 0)
         startLocation = self.myLocation
         self.mapStyle(withFileName: "style", andType: "json")
+        driverMarker.icon = UIImage(named: "car")
+        
 
     }
 
