@@ -79,10 +79,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
             }
             
             guard let placeList = placeList,
-                  let place = placeList.likelihoods.first?.place else { return }
+                  let place = placeList.likelihoods.first?.place,
+                  let address = place.formattedAddress else { return }
             
             self.searchView.fromTextField.text = "\(place.name)"
-            self.mapView.startAdd = place.name
+            self.mapView.startAdd = address
             self.mapView.startLocation = CLLocation(latitude: place.coordinate.latitude,
                                                     longitude: place.coordinate.longitude)
             let position = CLLocationCoordinate2D(latitude: place.coordinate.latitude,
