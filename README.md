@@ -23,6 +23,7 @@ pod 'TaxiGoDev'
 ## Usage
 You can access TaxiGoDev API like this:
 ```swift
+import TaxiGoDev
 var taxiGo = TaxiGo.shared
 ```
 
@@ -62,12 +63,30 @@ taxiGo.auth.getUserToken(success: { (auth) in
 
     // do something with the auth
     print(auth.access_token)
+    print(auth.refresh_token)
     ...
 
 }) { (err) in
     // do somwthing with the err
 }
 ```
+- **Refresh token**  
+The token you access before will be expired in a week. Please use `refresh_token` to get a new `access_token`. 
+```swift
+
+taxiGo.auth.refreshToken = <YOUR_REFRESH_TOKEN>
+
+taxiGo.auth.refreshToken(success: { (refreshToken) in
+            
+    // do something with the refreshToken
+    print(refreshToken.access_token)
+    ...
+
+}) { (err) in
+    // do somwthing with the err
+}
+```
+
 
 #### Request a ride
 ```swift
@@ -151,11 +170,11 @@ taxiGo.api.getNearbyDriver(withAccessToken: token,
 ```swift
 taxiGo.api.getRiderInfo(withAccessToken: token, success: { (rider, response) in
             
-            print(rider.name)
-            
-            rider.favorite?.forEach({ (info) in
-                print(info.address)
-            })
+    print(rider.name)
+    
+    rider.favorite?.forEach({ (info) in
+        print(info.address)
+    })
 
 }) { (err, response) in
     // do something with the err
@@ -166,7 +185,7 @@ taxiGo.api.getRiderInfo(withAccessToken: token, success: { (rider, response) in
 
 ## Author
 
-shannn214, gracejin214@gmail.com
+TaxiGo, hello@taxigo.com.tw
 
 ## License
 
