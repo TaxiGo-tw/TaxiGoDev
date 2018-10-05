@@ -131,7 +131,7 @@ extension MapViewController: GMSAutocompleteViewControllerDelegate {
         
         switch searchView.activeTextField {
         case searchView.fromTextField:
-            mapView.startAdd = place.name
+            mapView.startAdd = place.formattedAddress
             mapView.startLocation = CLLocation(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude)
             mapView.startMarker.position = place.coordinate
             mapView.startMarker.map = mapView
@@ -139,7 +139,7 @@ extension MapViewController: GMSAutocompleteViewControllerDelegate {
             updateCamera()
             
         case searchView.toTextField:
-            mapView.endAdd = place.name
+            mapView.endAdd = place.formattedAddress
             mapView.endLocation = CLLocation(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude)
             mapView.endMarker.position = place.coordinate
             mapView.endMarker.map = mapView
