@@ -42,6 +42,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
         taxiGoManager.taxiGo.api.taxiGoDelegate = self
         
         print(taxiGoManager.taxiGo.auth.accessToken)
+        
+        taxiGoManager.checkUserStatus { (success) in
+            if success {
+                print("did check user state")
+                fadeInAnimation(view: self.driverView)
+            }
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,7 +71,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
                                 height: UIScreen.main.bounds.height)
         
         driverView.cancelButton.addTarget(self, action: #selector(cancelRide), for: .touchUpInside)
-
         
     }
     
@@ -180,7 +187,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
                                     guard let self = self else { return }
                                     if response == 200 {
                                         fadeInAnimation(view: self.driverView)
-                                        self.lottieManager.playLottieAnimation(view: self.driverView) // Start loading animation
+//                                        self.lottieManager.playLottieAnimation(view: self.driverView) // Start loading animation
+                                        let userDefaults = UserDefaults.standard
+                                        userDefaults.setValue(ride.id, forKey: "ride_id")
+                                        userDefaults.synchronize()
                                         return
                                     }
                                     self.presentAlert(title: "發生錯誤，請稍後再試。", message: nil, cancel: false, handler: nil)
@@ -231,14 +241,14 @@ extension MapViewController: TaxiGoAPIDelegate {
 
     // MARK: By conforming TaxiGoAPIDelegate, rideDidUpdate() will keep providing the current status of your ride request.
     func rideDidUpdate(status: String, ride: TaxiGo.API.Ride) {
-        
+                
         guard let sta = Status(rawValue: status),
             let updateStatus = dic[sta] else { return }
         driverView.status.text = updateStatus
         statusAction(status: sta)
         
         guard let eta = ride.driver?.eta else { return }
-        lottieManager.stopLottieAnimation() // Stop loading animation
+//        lottieManager.stopLottieAnimation() // Stop loading animation
         driverView.name.text = ride.driver?.name
         driverView.eta.text = "預計 \(updateTime(timeStemp: eta)) 分鐘後抵達"
         driverView.plateNumber.text = ride.driver?.plate_number
@@ -264,6 +274,9 @@ extension MapViewController: TaxiGoAPIDelegate {
             confirmButton.isUserInteractionEnabled = true
             mapView.driverMarker.map = nil
             getCurrentPlace()
+            let userDefault = UserDefaults.standard
+            userDefault.removeObject(forKey: "ride_id")
+            userDefault.synchronize()
         case .driverEnroute:
             print("show enroute driver on map")
             self.mapView.driversMarker.forEach { (driver) in
