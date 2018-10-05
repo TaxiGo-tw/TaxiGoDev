@@ -59,8 +59,8 @@ public class TaxiGo {
             request.setValue(token, forHTTPHeaderField: "Authorization")
             request.addValue("application/json; charset=utf-8",
                              forHTTPHeaderField: "Content-Type")
-//            guard let key = self.apiKey else { return URLSessionDataTask() }
-//            request.addValue(key, forHTTPHeaderField: "x-api-key")
+            guard let key = self.apiKey else { return URLSessionDataTask() }
+            request.addValue(key, forHTTPHeaderField: "x-api-key")
             
             //send body
             do {
